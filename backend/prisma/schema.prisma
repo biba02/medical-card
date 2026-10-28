@@ -13,6 +13,22 @@ model User {
   passwordHash String   @map("password_hash") @db.VarChar(255)
   role         String   @default("PATIENT") @db.VarChar(30)
   createdAt    DateTime @default(now()) @map("created_at")
+  visits Visit[]
 
   @@map("users")
+}
+
+model Visit {
+  id              String   @id @default(uuid()) @db.Uuid
+  patientId       String   @map("patient_id") @db.Uuid
+  visitDate       DateTime @map("visit_date")
+  doctorName      String   @map("doctor_name") @db.VarChar(150)
+  specialization  String   @db.VarChar(100)
+  diagnosis       String?  @db.Text
+  recommendations String?  @db.Text
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  patient User @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  @@map("visits")
 }
