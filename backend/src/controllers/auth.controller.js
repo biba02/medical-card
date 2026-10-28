@@ -1,8 +1,15 @@
 
 import { loginUser, registerUser } from '../services/auth.service.js';
 
+const MAX_EMAIL_LENGTH = 254;
+const MIN_PASSWORD_LENGTH = 8;
+const MAX_PASSWORD_LENGTH = 128;
+
 function isValidEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  return (
+    email.length <= MAX_EMAIL_LENGTH &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  );
 }
 
 export async function register(req, res, next) {
@@ -14,13 +21,17 @@ export async function register(req, res, next) {
 
     if (!isValidEmail(normalizedEmail)) {
       return res.status(400).json({
-        message: 'Вкажіть коректну адресу електронної пошти.'
+        message: 'Вкажіть коректну адресу електронної пошти (до 254 символів).'
       });
     }
 
-    if (typeof password !== 'string' || password.length < 8) {
+    if (
+      typeof password !== 'string' ||
+      password.length === 0 ||
+      password.length > 128
+    ) {
       return res.status(400).json({
-        message: 'Пароль повинен містити щонайменше 8 символів.'
+        message: 'Пароль повинен містити від 8 до 128 символів.'
       });
     }
 
@@ -42,9 +53,11 @@ export async function login(req, res, next) {
     const normalizedEmail =
       typeof email === 'string' ? email.trim().toLowerCase() : '';
 
-    if (!isValidEmail(normalizedEmail) ||
-        typeof password !== 'string' ||
-        !password) {
+    if (
+      !isValidEmail(normalizedEmail) ||
+      typeof password !== 'string' ||
+      !password
+    ) {
       return res.status(400).json({
         message: 'Вкажіть коректний email і пароль.'
       });
