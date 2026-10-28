@@ -1,13 +1,35 @@
+
 import { loginUser, registerUser } from '../services/auth.service.js';
+
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
 
 export async function register(req, res, next) {
   try {
     const { email, password } = req.body ?? {};
-    if (typeof email !== 'string' || !email.trim() || typeof password !== 'string' || password.length < 8) {
-      return res.status(400).json({ message: 'Вкажіть коректний email і пароль довжиною щонайменше 8 символів.' });
+
+    const normalizedEmail =
+      typeof email === 'string' ? email.trim().toLowerCase() : '';
+
+    if (!isValidEmail(normalizedEmail)) {
+      return res.status(400).json({
+        message: 'Вкажіть коректну адресу електронної пошти.'
+      });
     }
-    const user = await registerUser(email, password);
-    return res.status(201).json({ message: 'Реєстрація успішна.', user });
+
+    if (typeof password !== 'string' || password.length < 8) {
+      return res.status(400).json({
+        message: 'Пароль повинен містити щонайменше 8 символів.'
+      });
+    }
+
+    const user = await registerUser(normalizedEmail, password);
+
+    return res.status(201).json({
+      message: 'Реєстрація успішна.',
+      user
+    });
   } catch (error) {
     next(error);
   }
@@ -16,10 +38,20 @@ export async function register(req, res, next) {
 export async function login(req, res, next) {
   try {
     const { email, password } = req.body ?? {};
-    if (typeof email !== 'string' || !email.trim() || typeof password !== 'string' || !password) {
-      return res.status(400).json({ message: 'Email і пароль обов’язкові.' });
+
+    const normalizedEmail =
+      typeof email === 'string' ? email.trim().toLowerCase() : '';
+
+    if (!isValidEmail(normalizedEmail) ||
+        typeof password !== 'string' ||
+        !password) {
+      return res.status(400).json({
+        message: 'Вкажіть коректний email і пароль.'
+      });
     }
-    const result = await loginUser(email, password);
+
+    const result = await loginUser(normalizedEmail, password);
+
     return res.json(result);
   } catch (error) {
     next(error);
