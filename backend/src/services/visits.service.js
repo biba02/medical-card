@@ -29,3 +29,13 @@ export async function createVisit(patientId, data) {
     }
   });
 }
+export async function deleteVisit(patientId, visitId) {
+  const result = await prisma.visit.deleteMany({
+    where: {
+      id: visitId,
+      patientId
+    }
+  });
+
+  return result.count > 0;
+}

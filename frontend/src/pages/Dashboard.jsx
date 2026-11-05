@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { apiRequest } from '../lib/api.js';
 
 export default function Dashboard() {
@@ -35,7 +35,19 @@ export default function Dashboard() {
         <div className="brand"><span className="brand-mark">✚</span><span>MedCard</span></div>
         <p className="nav-label">МЕНЮ</p>
         <div className="nav-item active"><span>▦</span> Огляд</div>
-        <div className="nav-item muted-nav"><span>▤</span> Медична картка <small>скоро</small></div>
+        <div
+  className="nav-item"
+  role="link"
+  tabIndex={0}
+  onClick={() => navigate('/visits')}
+  onKeyDown={(e) => {
+    if (e.key === 'Enter') navigate('/visits');
+  }}
+  style={{ cursor: 'pointer' }}
+>
+  <span>▤</span>
+  Медична картка
+</div>
         <div className="nav-item muted-nav"><span>♡</span> Призначення <small>скоро</small></div>
         <div className="sidebar-bottom"><div className="support-icon">?</div><div><b>Потрібна допомога?</b><small>MedCard · MVP</small></div></div>
       </aside>

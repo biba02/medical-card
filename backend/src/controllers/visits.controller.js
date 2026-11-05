@@ -2,7 +2,8 @@
 import {
   getVisits,
   getVisitById,
-  createVisit
+  createVisit,
+  deleteVisit
 } from '../services/visits.service.js';
 
 function isValidUuid(value) {
@@ -80,6 +81,30 @@ export async function addVisit(req, res, next) {
     return res.status(201).json({
       message: 'Візит успішно збережено.',
       visit
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function removeVisit(req, res, next) {
+  try {
+    if (!isValidUuid(req.params.id)) {
+      return res.status(400).json({
+        message: 'Некоректний ідентифікатор візиту.'
+      });
+    }
+
+    const deleted = await deleteVisit(req.user.id, req.params.id);
+
+    if (!deleted) {
+      return res.status(404).json({
+        message: 'Візит не знайдено.'
+      });
+    }
+
+    return res.status(200).json({
+      message: 'Візит успішно видалено.'
     });
   } catch (error) {
     next(error);

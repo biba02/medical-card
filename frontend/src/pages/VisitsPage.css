@@ -1,0 +1,179 @@
+
+.visits-page {
+  min-height: 100vh;
+  padding: 40px 6%;
+  background: #f4f7fb;
+  color: #1e293b;
+  font-family: Arial, sans-serif;
+}
+
+.visits-header,
+.visits-list-heading,
+.visit-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.visits-header {
+  margin-bottom: 30px;
+}
+
+.visits-header h1 {
+  font-size: 30px;
+  margin: 8px 0;
+}
+
+.visits-eyebrow {
+  color: #3978b5;
+  font-weight: bold;
+}
+
+.visits-back {
+  color: #3978b5;
+  text-decoration: none;
+}
+
+.visits-panel {
+  background: white;
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 5px 20px rgba(0,0,0,.05);
+}
+
+.visits-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.visits-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.visits-form input,
+.visits-form textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font: inherit;
+  box-sizing: border-box;
+}
+
+.visits-wide {
+  grid-column: 1 / -1;
+}
+
+.visits-form button,
+.visits-list-heading button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.visits-form button:disabled,
+.visits-list-heading button:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+.visits-success {
+  color: #166534;
+  background: #dcfce7;
+  padding: 14px;
+  border-radius: 8px;
+}
+
+.visits-error {
+  color: #991b1b;
+  background: #fee2e2;
+  padding: 14px;
+  border-radius: 8px;
+}
+
+.visits-loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.visits-spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid #dbeafe;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: visits-spin .8s linear infinite;
+}
+
+@keyframes visits-spin {
+  to { transform: rotate(360deg); }
+}
+
+.visits-empty {
+  color: #64748b;
+  padding: 25px;
+  text-align: center;
+}
+
+.visits-list {
+  display: grid;
+  gap: 16px;
+}
+
+.visit-card {
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.visit-card h3 {
+  margin: 0;
+}
+
+.visit-card-top span {
+  color: #64748b;
+}
+
+@media (max-width: 650px) {
+  .visits-form {
+    grid-template-columns: 1fr;
+  }
+
+  .visits-header,
+  .visit-card-top {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+.visit-delete-button {
+  margin-top: 16px;
+  padding: 10px 18px;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  background: #fff1f2;
+  color: #be123c;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.visit-delete-button:hover {
+  background: #ffe4e6;
+}
+
+.visit-delete-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
