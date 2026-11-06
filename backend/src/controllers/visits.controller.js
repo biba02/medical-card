@@ -6,6 +6,8 @@ import {
   deleteVisit
 } from '../services/visits.service.js';
 
+import { validateVisit } from '../utils/visit.validation.js';
+
 function isValidUuid(value) {
   return typeof value === 'string' &&
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
@@ -52,19 +54,7 @@ export async function addVisit(req, res, next) {
       recommendations
     } = req.body ?? {};
 
-    if (
-      typeof visitDate !== 'string' ||
-      !visitDate.trim() ||
-      Number.isNaN(Date.parse(visitDate)) ||
-      typeof doctorName !== 'string' ||
-      !doctorName.trim() ||
-      doctorName.trim().length > 150 ||
-      typeof specialization !== 'string' ||
-      !specialization.trim() ||
-      specialization.trim().length > 100 ||
-      (diagnosis != null && typeof diagnosis !== 'string') ||
-      (recommendations != null && typeof recommendations !== 'string')
-    ) {
+    if (!validateVisit(req.body)) {
       return res.status(400).json({
         message: 'Перевірте дату, ім’я лікаря та спеціалізацію.'
       });
