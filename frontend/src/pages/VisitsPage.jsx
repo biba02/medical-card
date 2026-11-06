@@ -18,18 +18,23 @@ export default function VisitsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
-  const [error, setError] = useState('');
+
+  const [formError, setFormError] = useState('');
+  const [listError, setListError] = useState('');
+  const [actionError, setActionError] = useState('');
   const [notice, setNotice] = useState('');
 
   async function loadVisits() {
     setLoading(true);
-    setError('');
+    setListError('');
 
     try {
       const data = await apiRequest('/visits');
       setVisits(data.visits ?? []);
     } catch (err) {
-      setError(err.message || 'Не вдалося завантажити візити.');
+      setListError(
+        err.message || 'Не вдалося завантажити візити.'
+      );
     } finally {
       setLoading(false);
     }
@@ -50,8 +55,10 @@ export default function VisitsPage() {
 
   async function addVisit(event) {
     event.preventDefault();
+
     setSaving(true);
-    setError('');
+    setFormError('');
+    setActionError('');
     setNotice('');
 
     try {
@@ -66,10 +73,12 @@ export default function VisitsPage() {
       });
 
       setForm(initialForm);
-      await loadVisits();
       setNotice('Візит успішно додано!');
+      await loadVisits();
     } catch (err) {
-      setError(err.message || 'Помилка збереження візиту.');
+      setFormError(
+        err.message || 'Помилка збереження візиту.'
+      );
     } finally {
       setSaving(false);
     }
@@ -83,7 +92,7 @@ export default function VisitsPage() {
     if (!confirmed) return;
 
     setDeletingId(id);
-    setError('');
+    setActionError('');
     setNotice('');
 
     try {
@@ -97,7 +106,9 @@ export default function VisitsPage() {
 
       setNotice('Візит успішно видалено!');
     } catch (err) {
-      setError(err.message || 'Не вдалося видалити візит.');
+      setActionError(
+        err.message || 'Не вдалося видалити візит.'
+      );
     } finally {
       setDeletingId(null);
     }
@@ -183,20 +194,28 @@ export default function VisitsPage() {
           </label>
 
           <button type="submit" disabled={saving}>
-            {saving ? 'Збереження...' : '+ Додати візит'}
+            {saving
+              ? 'Збереження...'
+              : '+ Додати візит'}
           </button>
         </form>
       </section>
 
-      {notice && (
-        <p className="visits-success" role="status">
-          {notice}
+      {formError && (
+        <p className="visits-error" role="alert">
+          {formError}
         </p>
       )}
 
-      {error && (
+      {actionError && (
         <p className="visits-error" role="alert">
-          {error}
+          {actionError}
+        </p>
+      )}
+
+      {notice && (
+        <p className="visits-success" role="status">
+          {notice}
         </p>
       )}
 
@@ -214,12 +233,15 @@ export default function VisitsPage() {
         </div>
 
         {loading ? (
-          <div className="visits-loading" role="status">
+          <div
+            className="visits-loading"
+            role="status"
+          >
             <span className="visits-spinner" />
             Завантаження візитів...
           </div>
-        ) : error ? (
-          <p className="visits-error">
+        ) : listError ? (
+          <p className="visits-error" role="alert">
             Не вдалося завантажити або оновити дані.
             Спробуйте ще раз.
           </p>
@@ -230,7 +252,10 @@ export default function VisitsPage() {
         ) : (
           <div className="visits-list">
             {visits.map(visit => (
-              <article className="visit-card" key={visit.id}>
+              <article
+                className="visit-card"
+                key={visit.id}
+              >
                 <div className="visit-card-top">
                   <h3>{visit.doctorName}</h3>
 
