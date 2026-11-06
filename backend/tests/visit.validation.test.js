@@ -42,4 +42,15 @@ describe('MedCard — перевірка даних медичного візи�
       specialization: ''
     })).toBe(false);
   });
+it('Відхиляє числове ПІБ лікаря (MED-46)', () => {
+  const visit = {
+    visitDate: '2026-11-07T16:00:00.000Z',
+    doctorName: '1234567',
+    specialization: 'Терапевт',
+    diagnosis: 'ГРВ',
+    recommendations: 'Пити більше води'
+  };
+
+  expect(validateVisit(visit)).toBe(false);
+});
 });
