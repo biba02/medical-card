@@ -31,7 +31,7 @@ async function start() {
     throw new Error('Перевірте DATABASE_URL і JWT_SECRET у файлі .env');
   }
   await connectDb();
-  app.listen(port, () => console.log(`MedCard API listening at http://localhost:${port}`));
+  app.listen(port);
 }
 
 start().catch(async (error) => {
